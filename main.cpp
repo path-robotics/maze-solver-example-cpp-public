@@ -35,5 +35,19 @@ int main() {
     MazeSolver solver3(maze3);
     std::cout << solver3.solve() << std::endl;
 
+    // Test User Story 4 - winding paths
+    std::cout << "\n=== User Story 4 ===" << std::endl;
+    std::string maze4 = R"(###########
+#S        #
+##### ### #
+#   # #   #
+# # # # ###
+# # #   # #
+# ### # # #
+#     #  E#
+###########)";
+    MazeSolver solver4(maze4);
+    std::cout << solver4.solve() << std::endl;
+
     return 0;
 }
