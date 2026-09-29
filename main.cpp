@@ -49,5 +49,17 @@ int main() {
     MazeSolver solver4(maze4);
     std::cout << solver4.solve() << std::endl;
 
+    // Test User Story 5 - dead ends
+    std::cout << "\n=== User Story 5 ===" << std::endl;
+    std::string maze5 = R"(#########
+#S#     #
+# # ### #
+# #   # #
+# ### # #
+#     #E#
+#########)";
+    MazeSolver solver5(maze5);
+    std::cout << solver5.solve() << std::endl;
+
     return 0;
 }
