@@ -8,13 +8,11 @@ class MazeSolver {
 public:
     MazeSolver(std::string maze_string);
 
-    // User Story 1: Find the empty space in a single-row input
     int find_empty_space();
 
     // Find S (start) and E (end) positions in maze
     void find_start_and_end();
 
-    // User Story 3: Explore maze with rooms using simple search
     std::vector<std::pair<int, int>> explore_maze();
 
     // Main solving method
