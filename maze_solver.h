@@ -14,8 +14,8 @@ public:
     // Find S (start) and E (end) positions in maze
     void find_start_and_end();
 
-    // User Story 2: Walk through a straight hallway maze
-    std::vector<std::pair<int, int>> walk_hallway();
+    // User Story 3: Explore maze with rooms using simple search
+    std::vector<std::pair<int, int>> explore_maze();
 
     // Main solving method
     std::string solve();

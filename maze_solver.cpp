@@ -1,6 +1,6 @@
 #include "maze_solver.h"
 
-#include <algorithm>
+#include <set>
 #include <sstream>
 
 MazeSolver::MazeSolver(std::string maze_string) {
@@ -36,7 +36,7 @@ void MazeSolver::find_start_and_end() {
     }
 }
 
-std::vector<std::pair<int, int>> MazeSolver::walk_hallway() {
+std::vector<std::pair<int, int>> MazeSolver::explore_maze() {
     if (start.first == -1 || end.first == -1) {
         find_start_and_end();
     }
@@ -45,44 +45,48 @@ std::vector<std::pair<int, int>> MazeSolver::walk_hallway() {
         return {};
     }
 
-    std::pair<int, int> current = start;
-    path = {current};
+    // Use a simple queue for breadth-first exploration
+    std::vector<std::pair<std::pair<int, int>, std::vector<std::pair<int, int>>>> queue;
+    queue.push_back({start, {start}});
+    std::set<std::pair<int, int>> visited;
+    visited.insert(start);
 
-    // Simple approach: try moving right, down, left, up
     std::vector<std::pair<int, int>> directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
 
-    while (current != end) {
-        int row = current.first;
-        int col = current.second;
-        bool moved = false;
+    while (!queue.empty()) {
+        auto current = queue.front();
+        queue.erase(queue.begin());
+        std::pair<int, int> pos = current.first;
+        std::vector<std::pair<int, int>> path = current.second;
+
+        if (pos == end) {
+            this->path = path;
+            return path;
+        }
+
+        int row = pos.first;
+        int col = pos.second;
 
         for (auto& dir : directions) {
             int new_row = row + dir.first;
             int new_col = col + dir.second;
+            std::pair<int, int> new_pos(new_row, new_col);
 
             // Check bounds
             if (new_row >= 0 && new_row < maze.size() && new_col >= 0 && new_col < maze[new_row].size()) {
                 char cell = maze[new_row][new_col];
-                std::pair<int, int> new_pos(new_row, new_col);
 
-                // Move if it's empty space or the end, and we haven't been there
-                if ((cell == ' ' || cell == 'E') && std::find(path.begin(), path.end(), new_pos) == path.end()) {
-                    current = new_pos;
-                    path.push_back(current);
-                    moved = true;
-                    break;
+                // Can move to empty space or end, if not visited
+                if ((cell == ' ' || cell == 'E') && visited.count(new_pos) == 0) {
+                    visited.insert(new_pos);
+                    std::vector<std::pair<int, int>> new_path = path;
+                    new_path.push_back(new_pos);
+                    queue.push_back({new_pos, new_path});
                 }
             }
         }
-
-        if (!moved) {
-            break;
-        }
     }
 
-    if (current == end) {
-        return path;
-    }
     return {};
 }
 
@@ -95,8 +99,8 @@ std::string MazeSolver::solve() {
         }
     }
 
-    // Try hallway walking
-    std::vector<std::pair<int, int>> result = walk_hallway();
+    // Try exploring the maze
+    std::vector<std::pair<int, int>> result = explore_maze();
     if (!result.empty()) {
         std::ostringstream out;
         out << "Path found with " << result.size() << " steps: [";
