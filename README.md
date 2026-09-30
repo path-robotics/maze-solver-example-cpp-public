@@ -45,7 +45,11 @@ S #   #       #         #
 
 It was given a single constraint: use C++. Everything else was left up as a judgement call
 
-## Build and test
+## Status
+
+This code builds with no warnings at default flags. All 4 tests pass.
+
+You do not need to build anything to do this review. If you want to run it anyway, the project uses CMake and GoogleTest:
 
 ```
 cmake -S . -B build
